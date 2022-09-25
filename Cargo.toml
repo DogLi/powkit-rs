@@ -1,0 +1,25 @@
+[package]
+name = "powkit"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+chrono = "0.4"
+sha3 = { version = "0.10", default-features = false }
+parking_lot = "0.12"
+memmap = { version = "0.7.0" }
+anyhow = "1.0"
+byteorder = { version = "1", default-features = false }
+tiny-keccak = { version = "2.0.1", features = ["keccak"], optional = true }
+walkdir = "2.3"
+once_cell = "1.13"
+log = "0.4"
+
+[dev-dependencies]
+hex = "0.4"
+
+[features]
+default = ["std"]
+std = ["tiny-keccak"]
