@@ -25,7 +25,7 @@ impl MixRngState {
     }
 
     pub fn next_rng(&mut self) -> u32 {
-        self.rng.next()
+        self.rng.kiss()
     }
 
     pub fn new(seed: u64, size: u32) -> Self {
@@ -40,10 +40,10 @@ impl MixRngState {
         for i in (2..=size).rev() {
             let index = i as usize - 1;
 
-            let dst_ind = (rng.next() % i) as usize;
+            let dst_ind = (rng.kiss() % i) as usize;
             dst_seq.swap(index, dst_ind);
 
-            let src_ind = (rng.next() % i) as usize;
+            let src_ind = (rng.kiss() % i) as usize;
             src_seq.swap(index, src_ind);
         }
 

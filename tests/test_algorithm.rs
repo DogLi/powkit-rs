@@ -58,7 +58,7 @@ fn test_round() {
     let seed = 3000;
     let r = 1;
     let dataset_size = 0x407fff80;
-    let lookup = |index: usize| {
+    let lookup = |_index: usize| {
         vec![
             0xdc780f8b_u32,
             0x9e447174,

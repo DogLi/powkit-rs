@@ -1,3 +1,4 @@
+
 #[derive(Debug, Clone, Eq, PartialEq)]
 pub struct Kiss99 {
     pub z: u32,
@@ -6,11 +7,12 @@ pub struct Kiss99 {
     pub jcong: u32,
 }
 
+
 impl Kiss99 {
     pub fn new(z: u32, w: u32, jsr: u32, jcong: u32) -> Self {
         Self { z, w, jsr, jcong }
     }
-    pub fn next(&mut self) -> u32 {
+    pub fn kiss(&mut self) -> u32 {
         self.z = 36969 * (self.z & 65535) + (self.z >> 16);
         self.w = 18000 * (self.w & 65535) + (self.w >> 16);
         self.jcong = (69069 * self.jcong as u64 + 1234567) as u32;
@@ -82,11 +84,10 @@ mod test {
             },
         ];
         for tt in cases {
-            println!("{:?}", tt);
             let mut rng = Kiss99::new(tt.z, tt.w, tt.jsr, tt.jcong);
             let mut value = 0;
-            for i in 0..tt.index {
-                value = rng.next();
+            for _i in 0..tt.index {
+                value = rng.kiss();
             }
             assert_eq!(value, tt.value);
         }

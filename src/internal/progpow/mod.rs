@@ -36,9 +36,7 @@ pub fn initialize(hash: &[u8], nonce: u64) -> ([u32; 25], u64) {
     }
     seed[8] = nonce as u32;
     seed[9] = (nonce >> 32) as u32;
-    for i in 10..25 {
-        seed[i] = RAVEN_COIN_KAWPOW[i - 10]
-    }
+    seed[10..25].copy_from_slice(&RAVEN_COIN_KAWPOW[..(25 - 10)]);
     keccak_f800(&mut seed);
     let seed_head = seed[0] as u64 + ((seed[1] as u64) << 32);
     (seed, seed_head)
@@ -50,9 +48,10 @@ pub fn finalize(seed: [u32; 25], mix_hash: &[u8]) -> Vec<u8> {
         state[i] = seed[i];
         state[i + 8] = LittleEndian::read_u32(&mix_hash[i * 4..i * 4 + 4]);
     }
-    for i in 16..25 {
-        state[i] = RAVEN_COIN_KAWPOW[i - 16]
-    }
+    // for i in 16..25 {
+    //     state[i] = RAVEN_COIN_KAWPOW[i - 16]
+    // }
+    state[16..25].copy_from_slice(&RAVEN_COIN_KAWPOW[..(25 - 16)]);
     keccak_f800(&mut state);
     convutil::u32array_to_bytes(&state[0..8])
 }

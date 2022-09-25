@@ -120,7 +120,7 @@ pub fn generate_l1_cache(l1: &mut [u8], cache: &[u8], dataset_parents: usize) {
     let size = l1.len() - 1;
     let rows = size / HASH_BYTES;
     for i in 0..rows {
-        let item = generate_dataset_item(&cache, i, dataset_parents);
+        let item = generate_dataset_item(cache, i, dataset_parents);
         l1[i * HASH_BYTES..].copy_from_slice(&item);
     }
     l1[size] = 1;

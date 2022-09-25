@@ -11,12 +11,12 @@ pub fn init_mix(seed: u64, num_lanes: usize, num_regs: usize) -> Vec<Vec<u32>> {
     let w = fnv1_a(z, (seed >> 32) as u32);
 
     let mut mix: Vec<Vec<u32>> = vec![vec![0; num_regs]; num_lanes];
-    for lane in 0..num_lanes {
+    for (lane, mix_row) in mix.iter_mut().enumerate() {
         let jsr = fnv1_a(w, lane as u32);
         let jcong = fnv1_a(jsr, lane as u32);
         let mut rng = Kiss99::new(z, w, jsr, jcong);
-        for reg in 0..num_regs {
-            mix[lane][reg] = rng.next();
+        for r in mix_row.iter_mut() {
+            *r = rng.kiss();
         }
     }
     mix
@@ -42,10 +42,10 @@ pub fn round<F: Fn(usize) -> Vec<u32>>(
             let src = state.next_src();
             let dst = state.next_dst() as usize;
             let sel = state.next_rng();
-            for l in 0..cfg.lane_count {
-                let offset = mix[l][src as usize] as usize % (cfg.cache_bytes / 4);
+            for row in mix.iter_mut().take(cfg.lane_count) {
+                let offset = row[src as usize] as usize % (cfg.cache_bytes / 4);
                 let u32_l1 = LittleEndian::read_u32(&l1[offset * 4..]);
-                mix[l][dst] = random_merge(mix[l][dst], u32_l1, sel);
+                row[dst] = random_merge(row[dst], u32_l1, sel);
             }
         }
 
@@ -61,9 +61,9 @@ pub fn round<F: Fn(usize) -> Vec<u32>>(
             let sel1 = state.next_rng();
             let dst = state.next_dst() as usize;
             let sel2 = state.next_rng();
-            for l in 0..cfg.lane_count {
-                let data = random_math(mix[l][src1], mix[l][src2], sel1);
-                mix[l][dst] = random_merge(mix[l][dst], data, sel2);
+            for row in mix.iter_mut().take(cfg.lane_count) {
+                let data = random_math(row[src1], row[src2], sel1);
+                row[dst] = random_merge(row[dst], data, sel2);
             }
         }
     }
@@ -76,14 +76,14 @@ pub fn round<F: Fn(usize) -> Vec<u32>>(
         sels[i] = state.next_rng();
     }
 
-    for l in 0..cfg.lane_count {
+    for (l, row) in mix.iter_mut().enumerate().take(cfg.lane_count) {
         let offset =
             ((l as u32) ^ r as u32) % (cfg.lane_count as u32) * (num_words_per_lane as u32);
         for i in 0..num_words_per_lane {
             let index = offset as usize + i;
             let word = item[index];
             let r = dsts[i] as usize;
-            mix[l][r] = random_merge(mix[l][r], word, sels[i]);
+            row[r] = random_merge(row[r], word, sels[i]);
         }
     }
 }

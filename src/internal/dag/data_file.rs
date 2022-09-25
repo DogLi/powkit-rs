@@ -91,7 +91,7 @@ impl DataFile {
                 return false;
             }
             let file_name = file_name.unwrap();
-            let s: Vec<_> = file_name.rsplitn(1, "-").collect();
+            let s: Vec<_> = file_name.rsplitn(2, '-').collect();
             if s.len() != 2 {
                 return true;
             }

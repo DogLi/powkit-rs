@@ -4,14 +4,14 @@ pub fn keccak256(b: &[u8]) -> Vec<u8> {
     let mut hasher = Keccak256::default();
     hasher.update(b);
     let out = hasher.finalize();
-    out.iter().map(|u| *u).collect()
+    out.iter().copied().collect()
 }
 
 pub fn keccak512(b: &[u8]) -> Vec<u8> {
     let mut hasher = Keccak512::default();
     hasher.update(b);
     let out = hasher.finalize();
-    out.iter().map(|u| *u).collect()
+    out.iter().copied().collect()
 }
 
 pub const RCK8: [u32; 22] = [
@@ -254,7 +254,6 @@ mod test {
             87,
         ];
         keccak_f800(&mut state);
-        println!("{:?}", state);
         let state_exp = [
             2727376398, 508243021, 2925876228, 3038525842, 779074219, 4021386812, 1973177222,
             1971903119, 150269505, 1978096212, 1043480230, 3070330841, 3343571286, 1787623575,
