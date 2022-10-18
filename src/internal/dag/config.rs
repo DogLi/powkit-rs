@@ -6,6 +6,7 @@ use std::path::PathBuf;
 pub const HASH_BYTES: usize = 64;
 pub const WORD_BYTES: usize = 4;
 
+#[derive(Default, Debug, Clone)]
 pub struct LookupTable {
     pub table: Vec<usize>,
 }
@@ -16,6 +17,7 @@ impl LookupTable {
     }
 }
 
+#[derive(Debug, Clone)]
 pub struct DagConfig {
     pub name: String,
     pub revision: u64,
@@ -56,9 +58,9 @@ pub struct DagConfig {
 impl DagConfig {
     pub fn file_path(&self, epoch: usize, is_l1: bool) -> PathBuf {
         let name = if is_l1 {
-            format!("l1-{:?}", epoch)
+            format!("l1-{}-{:?}", self.name, epoch)
         } else {
-            format!("cache-{:?}", epoch)
+            format!("cache-{}-{:?}", self.name, epoch)
         };
         self.storage_dir.join(name)
     }

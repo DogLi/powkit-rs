@@ -125,13 +125,7 @@ impl DataFile {
 
     pub fn data(&self) -> &[u8] {
         let cache_len = self.mmap.len();
-        let dag: &[u8] = &self.mmap[0..cache_len - 1];
-        dag
+        let data: &[u8] = &self.mmap[0..cache_len - 1];
+        data
     }
-
-    // pub fn compute_light(&self, hash: H256, nonce: H64) -> (H256, H256) {
-    //     let cache_len = self.cache.len();
-    //     let dag = &self.cache[0..cache_len - 1];
-    //     crate::hashimoto_light(hash, nonce, self.full_size, dag)
-    // }
 }

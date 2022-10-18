@@ -1,4 +1,3 @@
-
 #[derive(Debug, Clone, Eq, PartialEq)]
 pub struct Kiss99 {
     pub z: u32,
@@ -6,7 +5,6 @@ pub struct Kiss99 {
     pub jsr: u32,
     pub jcong: u32,
 }
-
 
 impl Kiss99 {
     pub fn new(z: u32, w: u32, jsr: u32, jcong: u32) -> Self {

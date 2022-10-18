@@ -16,11 +16,11 @@ impl Client {
         Self { dag }
     }
 
-    pub fn new_raven_coin() -> Self {
+    pub fn new_raven_coin(storage_dir: PathBuf) -> Self {
         let cfg = DagConfig {
             name: "RVN".into(),
             revision: 23,
-            storage_dir: PathBuf::from("/tmp"),
+            storage_dir,
 
             dataset_init_bytes: 1 << 30,
             dataset_growth_bytes: 1 << 23,
