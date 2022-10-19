@@ -175,4 +175,31 @@ fn test_compute_rvn_coin() {
         assert_eq!(mix, tt.mix);
         assert_eq!(digest, tt.digest);
     }
+
+    // job:
+    //     id ="40c69e717b7e"
+    //     header_hash: "d467ef780b133916cd7ae762fdded0b8d29a2ab0402c3e8123eb0b5f335e3063"
+    //     seed_hash: "5d5674707d426883d592850443381021eb4738ee11e242760fcdad8295700bf8"
+    //     share_target_hex: "00000000ffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
+    //     refresh: true
+    //     height: 2498422
+    //     block_bits_hex: "1a57abac"
+    // submit:
+    //     miner_name: "ax.za"
+    //     job_id: "40c69e717b7e"
+    //     nonce: "0x111100001d87846b"
+    //     header: "0xd467ef780b133916cd7ae762fdded0b8d29a2ab0402c3e8123eb0b5f335e3063"
+    //     mix_hash: "0x8319f1fb3a3e265f746a48e2cb76f6ce28ce02d878747c51cb06cab287e5cb15"
+
+    let height = 2498422;
+    let header_hash: [u8; 32] = hex::decode("d467ef780b133916cd7ae762fdded0b8d29a2ab0402c3e8123eb0b5f335e3063").unwrap().try_into().unwrap();
+    let nonce = u64::from_str_radix("111100001d87846b", 16).unwrap();
+
+    for _ in 0..10 {
+        let (mix, digest) = client.compute(&header_hash, height, nonce).unwrap();
+        let real_target = hex::encode(digest);
+        println!("mix: {:?}", hex::encode(mix));
+        println!("digest: {:?}", real_target);
+        assert!(real_target < "00000000ffffffffffffffffffffffffffffffffffffffffffffffffffffffff".to_string());
+    }
 }

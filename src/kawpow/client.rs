@@ -47,7 +47,7 @@ impl Client {
     }
 
     // return mix, degest
-    pub fn compute(&self, hash: [u8; 32], height: u64, nonce: u64) -> Result<(Vec<u8>, Vec<u8>)> {
+    pub fn compute(&self, hash: &[u8; 32], height: u64, nonce: u64) -> Result<(Vec<u8>, Vec<u8>)> {
         let epoch = self.dag.config.calc_epoch(height as usize);
         let cache = self.dag.get_cache(epoch)?;
         let look_up = |index| {
@@ -56,7 +56,7 @@ impl Client {
         let dataset_size = self.dag.config.dataset_size(epoch);
 
         let r = kawpow(
-            &hash,
+            hash,
             height as u64,
             nonce,
             dataset_size,
